@@ -1,59 +1,19 @@
 {
   "name": "devflow",
-  "displayName": "DevFlow",
-  "version": "1.0.0",
-  "description": "PM-like hearing and automated dev workflow with 6 specialized agents. Supports TypeScript/Python/Go/Rust.",
-  "author": {
+  "owner": {
     "name": "Takuya Motoshima",
-    "url": "https://github.com/takuya-motoshima"
+    "email": "mail@takuya-motoshima.com"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/takuya-motoshima/devflow"
+  "metadata": {
+    "description": "PM-like hearing and automated dev workflow with 6 specialized agents. Supports TypeScript/Python/Go/Rust.",
+    "version": "1.0.0"
   },
-  "tags": [
-    "agents",
-    "development",
-    "automation",
-    "testing",
-    "review",
-    "documentation",
-    "multi-language"
-  ],
-  "license": "MIT",
-  "readme": "README.md",
-  "changelog": "CHANGELOG.md",
-  "engines": {
-    "claude-code": ">=1.0.0"
-  },
-  "features": {
-    "agents": [
-      {
-        "name": "orchestrator",
-        "description": "PM-like hearing and automated development workflow orchestration"
-      },
-      {
-        "name": "planner",
-        "description": "Design creation and impact analysis from requirements"
-      },
-      {
-        "name": "coder",
-        "description": "Code implementation for TypeScript/Python/Go/Rust"
-      },
-      {
-        "name": "tester",
-        "description": "Auto-detect test frameworks and generate/execute test code"
-      },
-      {
-        "name": "reviewer",
-        "description": "Code quality and security review with output reports"
-      },
-      {
-        "name": "documenter",
-        "description": "Auto-generate README, API specs, and architecture docs"
-      }
-    ],
-    "hooks": true,
-    "projectConfig": true
-  }
+  "plugins": [
+    {
+      "name": "devflow",
+      "source": ".",
+      "description": "PM-like hearing and automated dev workflow with 6 specialized agents",
+      "version": "1.0.0"
+    }
+  ]
 }
