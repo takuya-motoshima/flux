@@ -16,5 +16,8 @@
     "review",
     "documentation",
     "multi-language"
-  ]
+  ],
+  "agents": ".claude/agents/",
+  "commands": ".claude/commands/",
+  "hooks": ".claude/hooks/hooks.json"
 }
