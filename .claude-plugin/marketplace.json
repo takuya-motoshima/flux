@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "devflow",
-      "source": ".",
+      "source": "./",
       "description": "PM-like hearing and automated dev workflow with 6 specialized agents",
       "version": "1.0.0"
     }
