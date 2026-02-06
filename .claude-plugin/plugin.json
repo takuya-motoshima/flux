@@ -17,6 +17,6 @@
     "documentation",
     "multi-language"
   ],
-  "agents": [".claude/agents/"],
-  "commands": [".claude/commands/"]
+  "agents": ".claude/agents",
+  "commands": ".claude/commands"
 }
