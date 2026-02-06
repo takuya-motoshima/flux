@@ -1,0 +1,48 @@
+{
+  "name": "devflow",
+  "version": "1.0.0",
+  "description": "PM-like hearing, automated dev workflow with 6 specialized agents",
+  "agents": [
+    {
+      "path": "agents/orchestrator.md"
+    },
+    {
+      "path": "agents/planner.md"
+    },
+    {
+      "path": "agents/coder.md"
+    },
+    {
+      "path": "agents/tester.md"
+    },
+    {
+      "path": "agents/reviewer.md"
+    },
+    {
+      "path": "agents/documenter.md"
+    }
+  ],
+  "commands": [
+    {
+      "path": "commands/flow-dev.md"
+    },
+    {
+      "path": "commands/flow-design.md"
+    },
+    {
+      "path": "commands/flow-review.md"
+    },
+    {
+      "path": "commands/flow-test.md"
+    },
+    {
+      "path": "commands/flow-docs.md"
+    }
+  ],
+  "hooks": {
+    "path": "hooks/hooks.json"
+  },
+  "config": {
+    "projectTemplate": "project.yml.example"
+  }
+}

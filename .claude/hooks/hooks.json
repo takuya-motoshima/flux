@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "SubagentStart": {
+      "command": "echo '[START] $SUBAGENT_NAME is starting...'",
+      "description": "エージェント開始時に通知"
+    },
+    "SubagentStop": {
+      "command": "echo '[DONE] $SUBAGENT_NAME has finished'",
+      "description": "エージェント完了時に通知"
+    }
+  }
+}
