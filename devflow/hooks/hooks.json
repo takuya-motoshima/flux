@@ -1,0 +1,25 @@
+{
+  "description": "DevFlow agent lifecycle notifications",
+  "hooks": {
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[DevFlow] Agent started'"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[DevFlow] Agent finished'"
+          }
+        ]
+      }
+    ]
+  }
+}

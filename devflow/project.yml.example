@@ -1,5 +1,5 @@
-# Claude Code エージェントパック - プロジェクト設定ファイル
-# このファイルを .claude/project.yml にコピーして使用してください
+# DevFlow - プロジェクト設定ファイル
+# このファイルを project.yml にコピーして使用してください
 
 # プロジェクト基本情報
 project:

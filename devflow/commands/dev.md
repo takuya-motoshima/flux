@@ -1,5 +1,7 @@
 ---
 description: "Start development workflow with orchestrator agent"
+argument-hint: "[what to build]"
+disable-model-invocation: true
 ---
 
 # DevFlow: Development Start
@@ -12,7 +14,7 @@ orchestratorはプロジェクトマネージャーのように対話で要件�
 
 1. orchestratorエージェントに処理を移譲
 2. ユーザーとの対話で要件を段階的にヒアリング
-3. 開発フロー全体（planner → coder × 2 + tester → reviewer → documenter）を自動実行
+3. 開発フロー全体（planner → coder × N + tester → reviewer → documenter）を自動実行
 
-@orchestrator
+@devflow:orchestrator
 Please start the development workflow with PM-like hearing.

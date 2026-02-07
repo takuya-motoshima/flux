@@ -1,5 +1,6 @@
 ---
 description: "Run code review with reviewer agent"
+disable-model-invocation: true
 ---
 
 # DevFlow: Review
@@ -15,5 +16,5 @@ reviewerはコード品質とセキュリティをチェックし、レビュー
 3. セキュリティ問題（XSS、SQLインジェクション、コマンドインジェクション等）を自動検出
 4. レビュー結果を REVIEW.md に出力
 
-@reviewer
+@devflow:reviewer
 Please review the codebase and output the results to REVIEW.md.

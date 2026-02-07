@@ -1,5 +1,6 @@
 ---
 description: "Run tests with tester agent"
+disable-model-invocation: true
 ---
 
 # DevFlow: Test
@@ -15,5 +16,5 @@ testerはテストフレームワークを自動検出し、テストコード�
 3. テストコードを生成・実行
 4. テスト結果を報告
 
-@tester
+@devflow:tester
 Please run tests and report the results.

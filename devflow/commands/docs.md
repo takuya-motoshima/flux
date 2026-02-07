@@ -1,5 +1,6 @@
 ---
 description: "Generate documentation with documenter agent"
+disable-model-invocation: true
 ---
 
 # DevFlow: Documentation
@@ -15,5 +16,5 @@ documenterはREADME.md、API仕様書、アーキテクチャドキュメント�
 3. コードベースを分析
 4. ドキュメントを生成（README.md、docs/ARCHITECTURE.md、API仕様書）
 
-@documenter
+@devflow:documenter
 Please generate project documentation including README.md and architecture docs.

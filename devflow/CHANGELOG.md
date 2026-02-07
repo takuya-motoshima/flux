@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **orchestrator agent**: PM-like hearing with staged deepening questions
-  - Step 0: Automatic project environment analysis (for existing projects)
-  - Step 1: Requirements hearing with 5 principles
-  - Step 2: Development execution with parallel task management
+  - Step 0: Conversation language selection (first time only)
+  - Step 1: Automatic project environment analysis (for existing projects)
+  - Step 2: Requirements hearing with 5 principles
+  - Step 3: Development execution with parallel task management
 - **planner agent**: Design and impact analysis
 - **coder agent**: Multi-language implementation support
   - TypeScript/JavaScript support
@@ -33,23 +34,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - README.md auto-generation
   - OpenAPI/Swagger spec generation
   - Architecture documentation
-- **Custom commands** (`/flow-*`): Quick access to agents
-  - `/flow-dev`: Start development workflow (orchestrator)
-  - `/flow-design`: Create design document (planner)
-  - `/flow-review`: Run code review (reviewer)
-  - `/flow-test`: Execute tests (tester)
-  - `/flow-docs`: Generate documentation (documenter)
+- **Custom commands** (`/devflow:*`): Quick access to agents
+  - `/devflow:dev`: Start development workflow (orchestrator)
+  - `/devflow:design`: Create design document (planner)
+  - `/devflow:review`: Run code review (reviewer)
+  - `/devflow:test`: Execute tests (tester)
+  - `/devflow:docs`: Generate documentation (documenter)
 - **SubagentStart/Stop Hooks**: Notification on agent start/stop
 - **project.yml.example**: Project configuration template
 - **Plugin marketplace support**: Marketplace.json and plugin.json for distribution
 - **Plugin name**: DevFlow (short and memorable)
 
 ### Features
-- Parallel execution of 3 agents (coder × 2 + tester)
+- Dynamic parallel execution of coder × N + tester (number of coders based on task structure)
 - Project memory scope for knowledge persistence
 - Automatic test retry loop on failure
 - Multi-language coding standards enforcement
-- Read-only agents using disallowedTools (reviewer, documenter)
+- Source code protection: reviewer (read-only via disallowedTools), documenter (docs-only editing)
+- `maxTurns` on all agents to prevent runaway execution
+- `disable-model-invocation` on all commands (user-triggered only)
+- `argument-hint` on dev/design commands for autocomplete UX
+- Correct hooks.json format (official nested array structure)
+- LICENSE file at plugin root
+- Marketplace `category` and `tags` for discoverability
 
 ## [Unreleased]
 

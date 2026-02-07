@@ -1,19 +1,20 @@
 {
-  "name": "devflow",
+  "name": "flux",
   "owner": {
     "name": "Takuya Motoshima",
     "email": "mail@takuya-motoshima.com"
   },
   "metadata": {
-    "description": "PM-like hearing and automated dev workflow with 6 specialized agents. Supports TypeScript/Python/Go/Rust.",
-    "version": "1.0.0"
+    "description": "Collection of Claude Code plugins for enhanced development workflows"
   },
   "plugins": [
     {
       "name": "devflow",
-      "source": "./",
+      "source": "./devflow",
       "description": "PM-like hearing and automated dev workflow with 6 specialized agents",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "category": "development",
+      "tags": ["agents", "workflow", "automation", "multi-language", "testing", "review"]
     }
   ]
 }

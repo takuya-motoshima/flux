@@ -1,5 +1,5 @@
 # Agent memory files (user-specific)
-.claude/memory/
+**/memory/
 
 # OS
 .DS_Store
