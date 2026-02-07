@@ -1,5 +1,6 @@
 ---
 description: "Run tests with tester agent"
+argument-hint: "[test target or scope]"
 disable-model-invocation: true
 ---
 

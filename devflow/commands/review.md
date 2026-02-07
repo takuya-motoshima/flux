@@ -1,5 +1,6 @@
 ---
 description: "Run code review with reviewer agent"
+argument-hint: "[files or scope to review]"
 disable-model-invocation: true
 ---
 

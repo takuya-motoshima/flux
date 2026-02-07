@@ -1,8 +1,7 @@
 ---
 name: planner
 description: 要件整理と設計を行う。プロジェクト開始時に使用。
-tools: Read, Glob, Grep, Write
-disallowedTools: Edit
+tools: Read, Glob, Grep, Write, Edit
 model: sonnet
 memory: project
 maxTurns: 30

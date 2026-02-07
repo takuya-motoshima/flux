@@ -17,5 +17,21 @@
     "review",
     "documentation",
     "multi-language"
-  ]
+  ],
+  "agents": [
+    "./agents/orchestrator.md",
+    "./agents/planner.md",
+    "./agents/coder.md",
+    "./agents/tester.md",
+    "./agents/reviewer.md",
+    "./agents/documenter.md"
+  ],
+  "commands": [
+    "./commands/dev.md",
+    "./commands/design.md",
+    "./commands/review.md",
+    "./commands/test.md",
+    "./commands/docs.md"
+  ],
+  "hooks": "./hooks/hooks.json"
 }

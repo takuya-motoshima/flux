@@ -1,5 +1,6 @@
 ---
 description: "Generate documentation with documenter agent"
+argument-hint: "[documentation scope]"
 disable-model-invocation: true
 ---
 
