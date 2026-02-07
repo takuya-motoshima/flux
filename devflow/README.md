@@ -6,6 +6,20 @@ PM-like hearing and automated dev workflow with 6 specialized agents.
 
 Just tell DevFlow what you want to build. It handles design, implementation, testing, code review, and documentation — all automatically.
 
+## Table of Contents
+
+- [What happens when you run DevFlow](#what-happens-when-you-run-devflow)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Execution Flow](#execution-flow)
+- [Hooks (Notifications)](#hooks-notifications)
+- [Project Settings](#project-settings-optional)
+- [Uninstall](#uninstall)
+- [Update](#update)
+- [Related Links](#related-links)
+
 ## What happens when you run DevFlow
 
 ```
@@ -42,6 +56,16 @@ One instruction. Six agents. Full development cycle — from design to documenta
 /plugin marketplace add takuya-motoshima/flux
 /plugin install devflow@flux
 ```
+
+After installation, **restart Claude Code** to load the agents. Then verify with `/agents`.
+
+:::note
+If you get validation errors like `agents: Invalid input`, clear the plugin cache and retry:
+```
+rm -rf ~/.claude/plugins/cache/
+/plugin install devflow@flux
+```
+:::
 
 ## Usage
 
@@ -126,6 +150,28 @@ Configuration items:
 - Coding standards (max lines, type checking, etc.)
 - Security check items
 - Auto-documentation settings
+
+## Uninstall
+
+```
+/plugin uninstall devflow@flux
+```
+
+## Update
+
+```
+rm -rf ~/.claude/plugins/cache/
+cd ~/.claude/plugins/marketplaces/flux && git pull
+```
+
+Restart Claude Code after updating.
+
+## Related Links
+
+- [Claude Code Plugins](https://code.claude.com/docs/en/plugins)
+- [Plugin Marketplace](https://code.claude.com/docs/en/plugin-marketplaces)
+- [Sub-agents](https://code.claude.com/docs/en/sub-agents)
+- [Plugin Reference](https://code.claude.com/docs/en/plugins-reference)
 
 ## License
 

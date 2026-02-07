@@ -44,7 +44,9 @@ Choose your preferred scope:
 | **project** | Shared with team via Git |
 | **local** | Personal use, Git excluded |
 
-### 3. Verify
+### 3. Restart and verify
+
+Restart Claude Code, then run:
 
 ```
 /agents
@@ -60,5 +62,4 @@ MIT
 
 ## Author
 
-Takuya Motoshima
-https://github.com/takuya-motoshima
+Takuya Motoshima ([@takuya-motoshima](https://github.com/takuya-motoshima))

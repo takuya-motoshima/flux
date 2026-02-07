@@ -6,6 +6,20 @@ PM的なヒアリングと6つの専門エージェントによる自動開発�
 
 「何を作りたいか」を伝えるだけ。DevFlow が設計・実装・テスト・レビュー・ドキュメント生成まで自動で進める。
 
+## 目次
+
+- [DevFlow を使うとどうなる？](#devflow-を使うとどうなる)
+- [特徴](#特徴)
+- [必要要件](#必要要件)
+- [インストール](#インストール)
+- [使い方](#使い方)
+- [実行フロー](#実行フロー)
+- [Hooks（通知機能）](#hooks通知機能)
+- [プロジェクト設定](#プロジェクト設定オプション)
+- [アンインストール](#アンインストール)
+- [アップデート](#アップデート)
+- [関連リンク](#関連リンク)
+
 ## DevFlow を使うとどうなる？
 
 ```
@@ -42,6 +56,16 @@ DevFlow が自動で実行:
 /plugin marketplace add takuya-motoshima/flux
 /plugin install devflow@flux
 ```
+
+インストール後、**Claude Code を再起動**してエージェントを読み込む。`/agents` で確認できる。
+
+:::note
+`agents: Invalid input` 等のバリデーションエラーが出る場合、プラグインキャッシュをクリアして再試行:
+```
+rm -rf ~/.claude/plugins/cache/
+/plugin install devflow@flux
+```
+:::
 
 ## 使い方
 
@@ -126,6 +150,28 @@ cp project.yml.example project.yml
 - コーディング規約（最大行数、型チェック等）
 - セキュリティチェック項目
 - ドキュメント自動生成設定
+
+## アンインストール
+
+```
+/plugin uninstall devflow@flux
+```
+
+## アップデート
+
+```
+rm -rf ~/.claude/plugins/cache/
+cd ~/.claude/plugins/marketplaces/flux && git pull
+```
+
+アップデート後は Claude Code を再起動する。
+
+## 関連リンク
+
+- [Claude Code プラグイン](https://code.claude.com/docs/ja/plugins)
+- [プラグインマーケットプレイス](https://code.claude.com/docs/ja/plugin-marketplaces)
+- [サブエージェント](https://code.claude.com/docs/ja/sub-agents)
+- [プラグインリファレンス](https://code.claude.com/docs/ja/plugins-reference)
 
 ## ライセンス
 

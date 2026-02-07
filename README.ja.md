@@ -44,7 +44,9 @@ Claude Code プラグインマーケットプレイス - 開発ワークフロ�
 | **project** | チーム開発で共有（Git管理） |
 | **local** | 個人用（Git除外） |
 
-### 3. 確認
+### 3. 再起動して確認
+
+Claude Code を再起動してから実行:
 
 ```
 /agents
@@ -60,5 +62,4 @@ MIT
 
 ## 作者
 
-Takuya Motoshima
-https://github.com/takuya-motoshima
+Takuya Motoshima ([@takuya-motoshima](https://github.com/takuya-motoshima))

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Planned
+- Additional language support (Java, C#, etc.)
+- Integration with external code review tools
+- Performance profiling integration
+- CI/CD pipeline generation
+
 ## [1.0.0] - 2026-02-07
 
 ### Added
@@ -50,18 +58,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project memory scope for knowledge persistence
 - Automatic test retry loop on failure
 - Multi-language coding standards enforcement
-- Source code protection: reviewer (read-only via disallowedTools), documenter (docs-only editing)
+- Source code protection: reviewer (read-only via `disallowedTools: Edit`), documenter (docs-only editing via prompt instructions)
 - `maxTurns` on all agents to prevent runaway execution
 - `disable-model-invocation` on all commands (user-triggered only)
-- `argument-hint` on dev/design commands for autocomplete UX
+- `argument-hint` on all commands for autocomplete UX
 - Correct hooks.json format (official nested array structure)
 - LICENSE file at plugin root
 - Marketplace `category` and `tags` for discoverability
-
-## [Unreleased]
-
-### Planned
-- Additional language support (Java, C#, etc.)
-- Integration with external code review tools
-- Performance profiling integration
-- CI/CD pipeline generation

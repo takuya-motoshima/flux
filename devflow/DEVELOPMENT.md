@@ -171,6 +171,16 @@ maxTurns: 50  # 役割に応じて調整
 
 ## トラブルシューティング
 
+### インストール後に `/agents` にエージェントが表示されない
+
+プラグインのホットリロードは未実装（[#18174](https://github.com/anthropics/claude-code/issues/18174), [#6497](https://github.com/anthropics/claude-code/issues/6497)）。インストール後は **Claude Code を再起動** する必要がある
+
+```
+/plugin install devflow@flux
+→ Claude Code を終了して再起動
+→ /agents で確認
+```
+
 ### インストール時にバリデーションエラーが出る
 
 `agents: Invalid input` や `commands: Invalid input` が出る場合、以下を順番に試す
