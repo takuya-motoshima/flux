@@ -61,6 +61,8 @@ flux/                                # マーケットプレイスリポジト�
 │   │   └── docs.md                  # /devflow:docs - ドキュメント生成
 │   ├── hooks/
 │   │   └── hooks.json               # SubagentStart/Stop 通知フック
+│   ├── scripts/
+│   │   └── notify.js                # エージェント開始・終了の通知スクリプト
 │   ├── project.yml.example          # プロジェクト設定テンプレート
 │   ├── CHANGELOG.md                 # バージョン履歴
 │   ├── DEVELOPMENT.md               # このファイル

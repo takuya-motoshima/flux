@@ -18,7 +18,22 @@
     "documentation",
     "multi-language"
   ],
-  "commands": "./commands/",
-  "agents": "./agents/",
-  "hooks": "./hooks/hooks.json"
+  "commands": [
+    "./commands/dev.md",
+    "./commands/design.md",
+    "./commands/review.md",
+    "./commands/test.md",
+    "./commands/docs.md"
+  ],
+  "agents": [
+    "./agents/orchestrator.md",
+    "./agents/planner.md",
+    "./agents/coder.md",
+    "./agents/tester.md",
+    "./agents/reviewer.md",
+    "./agents/documenter.md"
+  ],
+  "hooks": [
+    "./hooks/hooks.json"
+  ]
 }
