@@ -252,6 +252,24 @@ maxTurns: 50  # エージェントの役割に応じて調整
 /devflow:dev
 ```
 
+### トラブルシューティング
+
+#### キャッシュが原因でインストール/更新が失敗する
+
+Claude Code にはプラグインキャッシュが自動無効化されない既知バグがある（[#14061](https://github.com/anthropics/claude-code/issues/14061), [#16866](https://github.com/anthropics/claude-code/issues/16866)）
+
+**症状**: plugin.json を修正してプッシュしても、インストール時に古い内容が読まれてバリデーションエラーになる
+
+**解決方法**:
+1. キャッシュを削除: `rm -rf ~/.claude/plugins/cache/`
+2. マーケットプレイスを更新: `cd ~/.claude/plugins/marketplaces/flux && git pull`
+3. 再インストール: `/plugin install devflow@flux`
+
+それでもダメなら:
+1. `/plugin marketplace remove flux`
+2. `/plugin marketplace add takuya-motoshima/flux`
+3. `/plugin install devflow@flux`
+
 ### 関連リソース
 - **プラグインドキュメント**: https://code.claude.com/docs/ja/plugins
 - **エージェントシステム**: https://code.claude.com/docs/ja/agents
