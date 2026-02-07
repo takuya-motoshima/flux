@@ -2,40 +2,31 @@
 
 > 最終更新: 2026-02-07
 
-このドキュメントは、DevFlow の開発者および Claude Code セッション向けのコンテキスト情報を提供する
+DevFlow の開発者および Claude Code セッション向けのコンテキスト情報
 
 ## プロジェクト概要
 
 **DevFlow** は、6つの専門エージェントを使って開発ワークフローを自動化する Claude Code プラグイン。PM のように段階的に要件を深掘りし、開発タスクを並列実行して効率化する
 
-**マーケットプレイス**: [Flux](https://github.com/takuya-motoshima/flux) に所属するプラグイン
+**マーケットプレイス**: [Flux](https://github.com/takuya-motoshima/flux)
 
 ### 主要機能
 - **PM的なヒアリング**: orchestrator が段階的な質問で要件を深掘り
 - **多言語対応**: TypeScript/JavaScript、Python、Go、Rust をサポート
-- **並列実行**: coder + tester を並列で実行してコンテキスト効率化（coder の数はタスクに応じて動的に決定）
+- **並列実行**: coder × N + tester を並列で実行（coder の数はタスクに応じて動的に決定）
 - **自動検出**: プロジェクト構造、テストフレームワーク、コーディング規約を自動認識
 - **セキュリティチェック**: XSS、SQLインジェクション、コマンドインジェクションを検出
 - **メモリ管理**: プロジェクトスコープで知識を永続化
 
-## 現在の状態
+### インストール
+```
+/plugin marketplace add takuya-motoshima/flux
+/plugin install devflow@flux
 
-### バージョン: 1.0.0
-- GitHub に初回リリース公開済み
-- 6つのエージェント実装済み (orchestrator, planner, coder, tester, reviewer, documenter)
-- カスタムコマンド (`/devflow:*`) で簡単アクセス
-- SubagentStart/Stop フックで通知機能
-- 英語・日本語 README 完備
-- MIT ライセンス
-- 詳細な v1.0.0 の CHANGELOG
-
-### リポジトリ
-- **GitHub**: https://github.com/takuya-motoshima/flux
-- **インストール**:
-  ```
-  /plugin marketplace add takuya-motoshima/flux
-  /plugin install devflow@flux
-  ```
+# 確認
+/agents
+/devflow:dev
+```
 
 ## プロジェクト構造
 
@@ -45,138 +36,88 @@ flux/                                # マーケットプレイスリポジト�
 │   └── marketplace.json             # マーケットプレイスカタログ (name: "flux")
 ├── devflow/                         # DevFlow プラグイン
 │   ├── .claude-plugin/
-│   │   └── plugin.json              # プラグインマニフェスト
-│   ├── agents/                      # 6つの専門エージェント
+│   │   └── plugin.json              # プラグインマニフェスト（メタデータのみ）
+│   ├── agents/                      # 6つの専門エージェント（自動検出）
 │   │   ├── orchestrator.md          # PM役 - 要件ヒアリング、ワークフロー管理
 │   │   ├── planner.md               # 設計担当 - 影響範囲分析、設計書作成
 │   │   ├── coder.md                 # 実装担当 - 多言語対応実装
 │   │   ├── tester.md                # テスト担当 - 自動検出、テスト実行
 │   │   ├── reviewer.md              # レビュー担当 - 品質・セキュリティチェック
 │   │   └── documenter.md            # ドキュメント担当 - README、API仕様書
-│   ├── commands/                    # カスタムスラッシュコマンド
+│   ├── commands/                    # カスタムスラッシュコマンド（自動検出）
 │   │   ├── dev.md                   # /devflow:dev - orchestrator 起動
 │   │   ├── design.md                # /devflow:design - 設計作成
 │   │   ├── review.md                # /devflow:review - コードレビュー
 │   │   ├── test.md                  # /devflow:test - テスト実行
 │   │   └── docs.md                  # /devflow:docs - ドキュメント生成
 │   ├── hooks/
-│   │   └── hooks.json               # SubagentStart/Stop 通知フック
+│   │   └── hooks.json               # SubagentStart/Stop 通知フック（自動検出）
 │   ├── scripts/
 │   │   └── notify.js                # エージェント開始・終了の通知スクリプト
 │   ├── project.yml.example          # プロジェクト設定テンプレート
-│   ├── CHANGELOG.md                 # バージョン履歴
+│   ├── CHANGELOG.md
 │   ├── DEVELOPMENT.md               # このファイル
-│   ├── LICENSE                      # MIT ライセンス
+│   ├── LICENSE
 │   ├── README.md                    # 英語ドキュメント
 │   └── README.ja.md                 # 日本語ドキュメント
-├── LICENSE                          # MIT ライセンス
+├── LICENSE
 ├── README.md                        # マーケットプレイス概要（EN）
 └── README.ja.md                     # マーケットプレイス概要（JP）
 ```
 
+**plugin.json について**: `agents/`, `commands/`, `hooks/hooks.json` はデフォルトの配置場所なので自動検出される。plugin.json にはメタデータのみ記載し、コンポーネントパスは指定しない
+
 ## エージェントアーキテクチャ
 
-### 1. orchestrator (PM役)
-**目的**: 要件ヒアリングとワークフローの調整
+### 実行フロー
 
-**ワークフロー**:
-- Step 0: 会話言語の確認 (日本語/英語)
-- Step 1: プロジェクト環境の自動分析 (既存改修の場合)
-- Step 2: 5つの原則に基づいた段階的な要件ヒアリング
-- Step 3: サブエージェントをTask ツールで順次/並列に起動
+```
+orchestrator (PM役)
+  ├── Step 0: 会話言語の確認 → .claude/memory/user-preferences.md に保存
+  ├── Step 1: プロジェクト環境の自動分析
+  ├── Step 2: 段階的な要件ヒアリング
+  └── Step 3: サブエージェント起動
+        │
+        ├─ planner (設計) ─── docs/DESIGN.md 出力
+        │
+        ├─ [並列] coder × N + tester (テスト仕様書作成)
+        │
+        ├─ tester (テスト実行) ─── 失敗時は coder と連携して自動修正
+        │
+        ├─ reviewer (レビュー) ─── REVIEW.md 出力
+        │
+        └─ documenter (ドキュメント) ─── README.md, docs/ARCHITECTURE.md 出力
+```
 
-**重要な設計判断**: 言語設定は `.claude/memory/user-preferences.md` に保存され、全エージェントで強制適用される
+### 各エージェントの役割
 
-### 2. planner (設計担当)
-**目的**: 設計作成と影響範囲分析
+| エージェント | 目的 | 成果物 | 備考 |
+|---|---|---|---|
+| **orchestrator** | 要件ヒアリング、ワークフロー管理 | — | 全エージェントを Task ツールで起動 |
+| **planner** | 設計作成、影響範囲分析 | `docs/DESIGN.md` | 並列実行グループを含む |
+| **coder** | 多言語対応の実装 | ソースコード | × N 並列実行可能 |
+| **tester** | テスト自動検出・実行 | `docs/TEST_SPEC.md`、テストコード | Vitest/Jest/pytest/cargo test 等を自動検出 |
+| **reviewer** | 品質・セキュリティレビュー | `REVIEW.md` | **読み取り専用**（disallowedTools: Edit） |
+| **documenter** | ドキュメント生成・更新 | README, API仕様書 | **ソースコード変更不可**（.md, .yaml のみ編集） |
 
-**成果物**:
-- `docs/DESIGN.md` - アーキテクチャと実装計画（並列実行グループを含む）
-- 既存プロジェクトの影響範囲分析
-- ファイル構造の推奨案
+### 設計上の重要なポイント
 
-### 3. coder (実装担当)
-**目的**: 多言語対応の実装
-
-**機能**:
-- TypeScript/JavaScript、Python、Go、Rust をサポート
-- 既存コードからコーディング規約を自動検出
-- planner の設計に基づいて実装
-- **× N 並列実行可能**（plannerの設計書の並列実行グループに基づいて分担）
-
-**重要**: すべてのコードとコメントはユーザーが選択した言語で記述される
-
-### 4. tester (テスト担当)
-**目的**: テストフレームワークの自動検出と実行
-
-**成果物**: `docs/TEST_SPEC.md`（テスト仕様書）、テストコード
-
-**機能**:
-- 自動検出: Vitest/Jest/Mocha/Jasmine/Ava (JS/TS)、pytest/unittest/nose (Python)、testing/testify (Go)、cargo test (Rust)
-- planner の仕様に基づいてテストコードを生成
-- カバレッジ測定
-- **自動リトライループ**: テスト失敗時は coder と連携して修正
-
-### 5. reviewer (レビュー担当)
-**目的**: コード品質とセキュリティのレビュー
-
-**成果物**: `REVIEW.md`（プロジェクトルート）
-
-**特徴**:
-- **読み取り専用エージェント** (disallowedTools: Edit) — ソースコードを変更しない
-- セキュリティチェックリスト (XSS, SQLインジェクション, コマンドインジェクション等)
-- 言語固有のセキュリティチェック
-
-### 6. documenter (ドキュメント担当)
-**目的**: ドキュメント生成・更新
-
-**成果物**: `README.md`, `docs/ARCHITECTURE.md`, OpenAPI/Swagger 仕様書
-
-**特徴**:
-- **ソースコード変更不可** — ドキュメントファイル（.md, .yaml 等）のみ編集可能
-- 既存ドキュメントがある場合は部分更新（Edit）を優先
-- すべてのドキュメントはユーザーが選択した言語で作成される
-
-## 重要な設計判断
-
-### 会話言語サポート
-- **orchestrator の Step 0**: 必ず最初に会話言語を確認
-- **永続化**: 会話言語は `.claude/memory/user-preferences.md` に保存
-- **強制適用**: すべてのエージェントがメモリをチェックし、会話と成果物の両方で選択された会話言語を使用
-
-### 並列実行戦略
-**なぜ並列?**
-- コンテキストウィンドウの効率化
-- 各サブエージェントは別コンテキストで作業
-- メイン会話は最終結果のみを受け取る
-
-**並列フェーズ** (Step 3):
-- coder × N（plannerの設計書の「並列実行グループ」に基づいて分担）
-- tester (テスト仕様書作成)
-
-**順次フェーズ**:
-- planner (設計が最初に完了する必要がある)
-- tester 実行 (コード作成後)
-- reviewer (テスト成功後)
-- documenter (最終ステップ)
-
-### ソースコード変更不可エージェント
-- `reviewer`: disallowedTools: Edit — ソースコードを変更せず、REVIEW.md に結果を出力
-- `documenter`: ソースコード（.ts, .js, .py, .go, .rs 等）は変更しない。ドキュメントファイル（.md, .yaml 等）のみ編集可能
+- **会話言語**: orchestrator が最初に確認し、`.claude/memory/user-preferences.md` に保存。全エージェントが参照して会話・成果物の言語を統一する
+- **並列実行**: 各サブエージェントは別コンテキストで動作。メイン会話は最終結果のみ受け取るため、コンテキストウィンドウを効率的に使える
+- **読み取り専用エージェント**: reviewer と documenter はソースコードを変更しない設計。レビュー結果やドキュメントのみ出力する
 
 ## 開発ガイドライン
 
 ### 新機能を追加する場合
 
-1. **関連エージェントを更新**: `agents/` のエージェントマークダウンファイルを修正
-2. **CHANGELOG.md を更新**: `[Unreleased]` セクションに追加
-3. **README を更新**: README.md と README.ja.md の両方に追加
-4. **ローカルテスト**: `claude --plugin-dir ./devflow` でテスト
-5. **バージョンアップ**: セマンティックバージョニングに従う
+1. `agents/` のエージェントマークダウンファイルを修正
+2. `CHANGELOG.md` の `[Unreleased]` セクションに追加
+3. README.md と README.ja.md の両方を更新
+4. `claude --plugin-dir ./devflow` でローカルテスト
+5. セマンティックバージョニングに従ってバージョンアップ
 
 ### エージェントマークダウンの構造
 
-各エージェントファイルはこの構造に従う:
 ```markdown
 ---
 name: agent-name
@@ -185,7 +126,7 @@ tools: Read, Edit, Write, Bash, Glob, Grep
 disallowedTools: Edit  # 必要に応じて
 model: sonnet
 memory: project
-maxTurns: 50  # エージェントの役割に応じて調整
+maxTurns: 50  # 役割に応じて調整
 ---
 あなたは[役割]です。
 
@@ -207,73 +148,70 @@ maxTurns: 50  # エージェントの役割に応じて調整
 
 ### カスタムコマンド
 
-`commands/` のカスタムコマンドはエージェントを直接呼び出す:
-- 説明は短く明確に
-- 一貫した命名規則: `/devflow:*`
-- エージェント呼び出しを含める: `@devflow:agent-name`
+`commands/` のコマンドはエージェントを直接呼び出す:
+- 命名規則: `/devflow:*`
+- エージェント呼び出し: `@devflow:agent-name`
 
 ### フック
 
 `hooks.json` は SubagentStart/Stop イベントを定義:
-- 公式フォーマット: イベントごとに配列のネスト構造（`[{ hooks: [{ type, command }] }]`）
-- デフォルト: ターミナルに通知を表示
-- カスタマイズ可能: ユーザーは Slack webhook、ログ記録などを追加可能
+- 公式フォーマット: `[{ hooks: [{ type, command }] }]`
+- 通知スクリプト: `scripts/notify.js`（Node.js の `process.stdin` でクロスプラットフォーム対応）
+- `${CLAUDE_PLUGIN_ROOT}` でプラグインルートを参照
+
+## コミットガイドライン
+
+- コミットは手動で行う（"Co-Authored-By: Claude" の記載なし）
+- コミットメッセージは英語
+- Conventional Commits に従う
 
 ## 今後の開発予定
 
-`CHANGELOG.md` → `[Unreleased]` セクションで計画中の機能を確認:
-- 追加言語サポート (Java, C# など)
-- 外部コードレビューツールとの連携
-- パフォーマンスプロファイリング連携
-- CI/CD パイプライン生成
+`CHANGELOG.md` → `[Unreleased]` セクションを参照
 
-### 拡張案
+## トラブルシューティング
 
-1. **エージェントの専門化**: より専門的なエージェントを追加 (例: performance-optimizer, security-auditor)
-2. **ワークフローのカスタマイズ**: `project.yml` でカスタムワークフローを定義可能に
-3. **テンプレートライブラリ**: 一般的なプロジェクトタイプ向けのビルド済みテンプレート
-4. **学習モード**: エージェントがユーザーのフィードバックから学習して改善
-5. **統合プラグイン**: GitHub Actions、GitLab CI、Jenkins との連携
+### インストール時にバリデーションエラーが出る
 
-## 重要事項
+`agents: Invalid input` や `commands: Invalid input` が出る場合、以下を順番に試す
 
-### コミットガイドライン
-- **著者の好み**: コミットは手動で行う、"Co-Authored-By: Claude" の記載なし
-- **言語**: コミットメッセージは英語（著者は日本人だが）
-- **フォーマット**: 可能な限り Conventional Commits に従う
+**Step 1: キャッシュクリア**
 
-### インストールテスト
-```
-/plugin marketplace add takuya-motoshima/flux
+Claude Code のプラグインキャッシュは自動無効化されない既知バグがある（[#14061](https://github.com/anthropics/claude-code/issues/14061), [#16866](https://github.com/anthropics/claude-code/issues/16866)）。plugin.json を修正しても古い内容が読まれ続ける
+
+```bash
+rm -rf ~/.claude/plugins/cache/
+cd ~/.claude/plugins/marketplaces/flux && git pull
 /plugin install devflow@flux
-
-# 確認
-/agents
-/devflow:dev
 ```
 
-### トラブルシューティング
+**Step 2: マーケットプレイスの名前衝突を確認**
 
-#### キャッシュが原因でインストール/更新が失敗する
+同名プラグインが別マーケットプレイスにあると、そちらが優先されることがある
 
-Claude Code にはプラグインキャッシュが自動無効化されない既知バグがある（[#14061](https://github.com/anthropics/claude-code/issues/14061), [#16866](https://github.com/anthropics/claude-code/issues/16866)）
+```bash
+# 登録済みマーケットプレイスを確認
+cat ~/.claude/plugins/known_marketplaces.json
 
-**症状**: plugin.json を修正してプッシュしても、インストール時に古い内容が読まれてバリデーションエラーになる
+# 不要なマーケットプレイスを削除
+/plugin marketplace remove <古いマーケットプレイス名>
+```
 
-**解決方法**:
-1. キャッシュを削除: `rm -rf ~/.claude/plugins/cache/`
-2. マーケットプレイスを更新: `cd ~/.claude/plugins/marketplaces/flux && git pull`
-3. 再インストール: `/plugin install devflow@flux`
+**Step 3: マーケットプレイスの再登録**
 
-それでもダメなら:
-1. `/plugin marketplace remove flux`
-2. `/plugin marketplace add takuya-motoshima/flux`
-3. `/plugin install devflow@flux`
+```bash
+/plugin marketplace remove flux
+/plugin marketplace add takuya-motoshima/flux
+rm -rf ~/.claude/plugins/cache/
+/plugin install devflow@flux
+```
 
-### 関連リソース
-- **プラグインドキュメント**: https://code.claude.com/docs/ja/plugins
-- **エージェントシステム**: https://code.claude.com/docs/ja/agents
-- **マーケットプレイス**: https://code.claude.com/docs/ja/plugin-marketplaces
+## 関連リソース
+
+- [プラグインドキュメント](https://code.claude.com/docs/ja/plugins)
+- [プラグインリファレンス](https://code.claude.com/docs/ja/plugins-reference)
+- [エージェントシステム](https://code.claude.com/docs/ja/agents)
+- [マーケットプレイス](https://code.claude.com/docs/ja/plugin-marketplaces)
 
 ## 連絡先
 
