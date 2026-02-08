@@ -7,7 +7,7 @@ Just say what you want to build. Design, tests, README — done. You're welcome.
 "Too many projects, not enough hands... can't AI just handle everything?" — That's why I built this.
 Now I let DevFlow handle the work while I juggle 4 projects in parallel.
 
-DevFlow is a Claude Code plugin where 6 specialized agents handle everything from design to documentation automatically.
+DevFlow is a Claude Code plugin where 5 specialized agents handle everything from design to documentation automatically.
 It starts with a requirements hearing, so you don't even need a spec doc.
 
 ## What happens when you run DevFlow?
@@ -70,21 +70,14 @@ After installation, **restart Claude Code** to load the agents. Verify with `/ag
 ### Custom Commands (Recommended)
 
 ```bash
-/devflow:dev       # Start development (launch orchestrator)
+/devflow:dev       # Start development (PM workflow)
 /devflow:design    # Create design
 /devflow:review    # Code review
 /devflow:test      # Run tests
 /devflow:docs      # Generate documentation
 ```
 
-### Or, specify an agent directly
-
-```
-@devflow:orchestrator
-I want to build a chat app using Gemini API
-```
-
-You can also call individual agents directly:
+### Or, call individual agents directly
 
 ```
 @devflow:planner    # Design only
@@ -98,7 +91,7 @@ You can also call individual agents directly:
 
 ```mermaid
 flowchart TD
-    A["orchestrator ← User gives instruction only once"] --> B["Step 0: Language selection (first time only)"]
+    A["/devflow:dev ← User gives instruction only once"] --> B["Step 0: Language selection (first time only)"]
     B --> C["Step 1: Project analysis (existing projects)"]
     C --> D["Step 2: Requirements hearing"]
     D --> E["planner → docs/DESIGN.md"]
@@ -113,10 +106,9 @@ flowchart TD
 
 | Agent | Role | Output |
 |-------|------|--------|
-| `orchestrator` | PM: requirements hearing, dev flow management | - |
 | `planner` | Designer: impact analysis, design creation | `docs/DESIGN.md` |
 | `coder` | Developer: multi-language implementation | Source code |
-| `tester` | Tester: framework auto-detection, test execution | Test code |
+| `tester` | Tester: framework auto-detection, test execution | `docs/TEST_SPEC.md`, `docs/TEST_REPORT.md` |
 | `reviewer` | Reviewer: quality & security checks | `docs/REVIEW.md` |
 | `documenter` | Documenter: README, API specs | `README.md`, `docs/` |
 
@@ -154,4 +146,4 @@ MIT
 
 ## Author
 
-Takuya Motoshima ([@takuya-motoshima](https://github.com/takuya-motoshima))
+Takuya Motoshima ([@takuya-motoshima](https://github.com/takuya-motoshima)) / [X](https://x.com/takuya_motech)

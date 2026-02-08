@@ -26,7 +26,7 @@ maxTurns: 50
 
 1. **既存の規約ファイルを確認** — .eslintrc, .prettierrc, pyproject.toml, .editorconfig, CONTRIBUTING.md, CODE_STYLE.md, go.mod, Cargo.toml等
 2. **既存コードのパターンを分析** — 命名規則（camelCase/snake_case/PascalCase）、インデント（2スペース/4スペース/タブ）、コメントスタイル
-3. **orchestratorから共有された情報を活用** — プロジェクトタイプ（frontend/backend/fullstack/cli）、使用言語・フレームワーク
+3. **Task プロンプトで共有された情報を活用** — プロジェクトタイプ（frontend/backend/fullstack/cli）、使用言語・フレームワーク
 
 ## コーディング規約
 

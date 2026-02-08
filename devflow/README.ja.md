@@ -7,7 +7,7 @@
 「プロジェクト多すぎて手が回らない...全部AIに任せられないかな」— そう思って作った。
 今は DevFlow に任せて、1人で4つのプロジェクトを並行で回してる。
 
-DevFlow は6つの専門エージェントが設計からドキュメントまで自動で仕上げる Claude Code プラグインです。
+DevFlow は5つの専門エージェントが設計からドキュメントまで自動で仕上げる Claude Code プラグインです。
 要件のヒアリングから始まるので、仕様書がなくても大丈夫です。
 
 ## DevFlow を使うとどうなる？
@@ -70,21 +70,14 @@ DevFlow: 爆速モードで進めます。
 ### カスタムコマンドで簡単実行（推奨）
 
 ```bash
-/devflow:dev       # 開発開始（orchestrator起動）
+/devflow:dev       # 開発開始（PM ワークフロー）
 /devflow:design    # 設計作成
 /devflow:review    # コードレビュー
 /devflow:test      # テスト実行
 /devflow:docs      # ドキュメント生成
 ```
 
-### または、エージェントを直接指定
-
-```
-@devflow:orchestrator
-Gemini APIを使ったチャットアプリを作りたい
-```
-
-個別のエージェントを直接呼び出すこともできます:
+### または、個別のエージェントを直接呼び出す
 
 ```
 @devflow:planner    # 設計のみ
@@ -98,7 +91,7 @@ Gemini APIを使ったチャットアプリを作りたい
 
 ```mermaid
 flowchart TD
-    A["orchestrator ← ユーザーは1回指示するだけ"] --> B["Step 0: 会話言語の選択（初回のみ）"]
+    A["/devflow:dev ← ユーザーは1回指示するだけ"] --> B["Step 0: 会話言語の選択（初回のみ）"]
     B --> C["Step 1: プロジェクト環境分析（既存改修の場合）"]
     C --> D["Step 2: 要件ヒアリング"]
     D --> E["planner → docs/DESIGN.md"]
@@ -113,10 +106,9 @@ flowchart TD
 
 | エージェント | 役割 | 出力 |
 |------------|------|------|
-| `orchestrator` | PM: 要件ヒアリング、開発フロー管理 | - |
 | `planner` | 設計: 影響範囲分析、設計書作成 | `docs/DESIGN.md` |
 | `coder` | 実装: 多言語対応コーディング | ソースコード |
-| `tester` | テスト: フレームワーク自動検出、テスト実行 | テストコード |
+| `tester` | テスト: フレームワーク自動検出、テスト実行 | `docs/TEST_SPEC.md`, `docs/TEST_REPORT.md` |
 | `reviewer` | レビュー: 品質・セキュリティチェック | `docs/REVIEW.md` |
 | `documenter` | ドキュメント: README、API仕様書 | `README.md`, `docs/` |
 
@@ -154,4 +146,4 @@ MIT
 
 ## 著者
 
-Takuya Motoshima ([@takuya-motoshima](https://github.com/takuya-motoshima))
+Takuya Motoshima ([@takuya-motoshima](https://github.com/takuya-motoshima)) / [X](https://x.com/takuya_motech)
