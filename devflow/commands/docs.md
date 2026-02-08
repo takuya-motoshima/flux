@@ -6,16 +6,16 @@ disable-model-invocation: true
 
 # DevFlow: Documentation
 
-documenterエージェントを呼び出して、ドキュメントを生成してください。
+Delegate to the documenter agent to generate documentation.
 
-documenterはREADME.md、API仕様書、アーキテクチャドキュメントを自動生成します。
+The documenter auto-generates README.md, API specs, and architecture documents.
 
-## 実行手順
+## Execution Steps
 
-1. documenterエージェントに処理を移譲
-2. プロジェクト情報を収集（package.json等）
-3. コードベースを分析
-4. ドキュメントを生成（README.md、docs/ARCHITECTURE.md、API仕様書）
+1. Delegate to the documenter agent
+2. Collect project information (package.json, etc.)
+3. Analyze the codebase
+4. Generate documentation (README.md, docs/ARCHITECTURE.md, API specs)
 
 @devflow:documenter
-Please generate project documentation including README.md and architecture docs.
+Please generate project documentation. Follow the generation conditions defined in your instructions for each document type.

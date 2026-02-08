@@ -2,25 +2,25 @@
 
 # Flux
 
-A Claude Code plugin marketplace for enhanced development workflows.
+A plugin collection that accelerates your Claude Code development workflow.
 
 ## Available Plugins
 
-### [DevFlow](devflow/)
+### [DevFlow](devflow/README.md)
 
-Just tell it what you want to build — DevFlow handles design, implementation, testing, code review, and documentation automatically with 6 specialized agents.
+Just say what you want to build. DevFlow handles the rest.
 
 ```
-You: /devflow:dev "I want to build a chat app using Gemini API"
+You:     /devflow:dev
+         "I want to build a chat app using Gemini API"
 
-→ docs/DESIGN.md    Design document
-→ src/              Source code (parallel implementation)
-→ tests/            Auto-generated tests
-→ REVIEW.md         Quality & security review
-→ README.md, docs/  Documentation
+DevFlow: Web UI or CLI? Save conversation history?
+You:     Web UI. Session-only is fine.
+
+→ Automatically runs design → code → test → review → docs
 ```
 
-**Features**: PM-like hearing, multi-language (TS/JS, Python, Go, Rust), parallel execution, security checks, project memory
+**Features**: Conversational requirements, multi-language (TS/JS, Python, Go, Rust), parallel execution, development modes, security checks
 
 ## Installation
 

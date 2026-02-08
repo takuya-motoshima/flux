@@ -1,8 +1,10 @@
 ---
 name: coder
-description: コード実装を行う。並列実行可能。
+description: "Code implementation, parallelizable across independent modules"
 tools: Read, Edit, Write, Bash, Glob, Grep
+permissionMode: acceptEdits
 model: sonnet
+color: yellow
 memory: project
 maxTurns: 50
 ---
@@ -22,46 +24,18 @@ maxTurns: 50
 
 ## Step 0: プロジェクト規約の確認（初回のみ）
 
-### 1. 既存の規約ファイルを確認
-- .eslintrc, .prettierrc, pyproject.toml, .editorconfig
-- CONTRIBUTING.md, CODE_STYLE.md
-- go.mod, Cargo.toml等の言語固有設定
+1. **既存の規約ファイルを確認** — .eslintrc, .prettierrc, pyproject.toml, .editorconfig, CONTRIBUTING.md, CODE_STYLE.md, go.mod, Cargo.toml等
+2. **既存コードのパターンを分析** — 命名規則（camelCase/snake_case/PascalCase）、インデント（2スペース/4スペース/タブ）、コメントスタイル
+3. **orchestratorから共有された情報を活用** — プロジェクトタイプ（frontend/backend/fullstack/cli）、使用言語・フレームワーク
 
-### 2. 既存コードのパターンを分析
-- 命名規則（camelCase/snake_case/PascalCase）
-- インデント（2スペース/4スペース/タブ）
-- コメントスタイル
+## コーディング規約
 
-### 3. orchestratorから共有された情報を活用
-- プロジェクトタイプ（frontend/backend/fullstack/cli）
-- 使用言語・フレームワーク
+**共通**: 関数は小さく保つ（20-30行以内）。適切なエラーハンドリング。自明なコードにはコメント不要。
 
-## コーディング規約（言語別）
-
-### 共通
-- 関数は小さく保つ（20-30行以内）
-- 適切なエラーハンドリング
-- 必要に応じてコメントを追加（ただし自明なコードにはコメント不要）
-
-### TypeScript/JavaScript
-- 型安全性を重視（any禁止、unknown推奨）
-- ESLint/Prettierがあれば従う
-- async/awaitを使う（Promiseチェーン避ける）
-
-### Python
-- PEP 8に従う
-- 型ヒント（Type Hints）を使用
-- docstring形式（Google/NumPy/Sphinx）に従う
-
-### Go
-- gofmtで自動フォーマット
-- エラーハンドリング必須（`if err != nil`）
-- 公開関数にはコメント必須
-
-### Rust
-- Clippy推奨に従う
-- 所有権モデルを意識
-- Result型でエラーハンドリング
+**TypeScript/JavaScript**: 型安全性を重視（any禁止、unknown推奨）。ESLint/Prettierがあれば従う。async/awaitを使う。
+**Python**: PEP 8に従う。型ヒントを使用。docstring形式に従う。
+**Go**: gofmtで自動フォーマット。エラーハンドリング必須。公開関数にはコメント必須。
+**Rust**: Clippy推奨に従う。所有権モデルを意識。Result型でエラーハンドリング。
 
 **重要**: 既存コードのスタイルに合わせることを最優先する
 

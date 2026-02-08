@@ -6,14 +6,14 @@ disable-model-invocation: true
 
 # DevFlow: Design
 
-plannerエージェントを呼び出して、設計ドキュメントを作成してください。
+Delegate to the planner agent to create a design document.
 
-plannerは要件から設計を作成し、影響範囲を分析します。
+The planner analyzes requirements, creates a design, and identifies the impact scope.
 
-## 実行手順
+## Execution Steps
 
-1. plannerエージェントに処理を移譲
-2. 要件を分析して設計ドキュメント（docs/DESIGN.md）を生成
+1. Delegate to the planner agent
+2. Analyze requirements and generate a design document (docs/DESIGN.md)
 
 @devflow:planner
 Please create a design document for the requirements.

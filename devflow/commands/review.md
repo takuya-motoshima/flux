@@ -6,16 +6,16 @@ disable-model-invocation: true
 
 # DevFlow: Review
 
-reviewerエージェントを呼び出して、コードレビューを実行してください。
+Delegate to the reviewer agent to run a code review.
 
-reviewerはコード品質とセキュリティをチェックし、レビュー結果を REVIEW.md に出力します。
+The reviewer checks code quality and security, then outputs results to docs/REVIEW.md.
 
-## 実行手順
+## Execution Steps
 
-1. reviewerエージェントに処理を移譲
-2. コード品質（可読性、保守性、型安全性）をチェック
-3. セキュリティ問題（XSS、SQLインジェクション、コマンドインジェクション等）を自動検出
-4. レビュー結果を REVIEW.md に出力
+1. Delegate to the reviewer agent
+2. Check code quality (readability, maintainability, type safety)
+3. Detect security issues (XSS, SQL injection, command injection, etc.)
+4. Output review results to docs/REVIEW.md
 
 @devflow:reviewer
-Please review the codebase and output the results to REVIEW.md.
+Please review the codebase and output the results to docs/REVIEW.md.

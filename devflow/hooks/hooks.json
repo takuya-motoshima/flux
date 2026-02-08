@@ -1,5 +1,5 @@
 {
-  "description": "DevFlow agent lifecycle notifications",
+  "description": "DevFlow agent lifecycle hooks",
   "hooks": {
     "SubagentStart": [
       {

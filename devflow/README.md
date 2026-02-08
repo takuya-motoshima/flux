@@ -2,74 +2,72 @@
 
 # DevFlow
 
-PM-like hearing and automated dev workflow with 6 specialized agents.
+Just say what you want to build. Design, tests, README — done. You're welcome.
 
-Just tell DevFlow what you want to build. It handles design, implementation, testing, code review, and documentation — all automatically.
+"Too many projects, not enough hands... can't AI just handle everything?" — That's why I built this.
+Now I let DevFlow handle the work while I juggle 4 projects in parallel.
 
-## Table of Contents
+DevFlow is a Claude Code plugin where 6 specialized agents handle everything from design to documentation automatically.
+It starts with a requirements hearing, so you don't even need a spec doc.
 
-- [What happens when you run DevFlow](#what-happens-when-you-run-devflow)
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Execution Flow](#execution-flow)
-- [Hooks (Notifications)](#hooks-notifications)
-- [Project Settings](#project-settings-optional)
-- [Uninstall](#uninstall)
-- [Update](#update)
-- [Related Links](#related-links)
-
-## What happens when you run DevFlow
+## What happens when you run DevFlow?
 
 ```
-You: /devflow:dev
-     "I want to build a chat app using Gemini API"
+You:     /devflow:dev
+         "I want to build a chat app using Gemini API"
 
-DevFlow automatically:
-  1. Asks a few questions to clarify requirements
-  2. Creates a design document         → docs/DESIGN.md
-  3. Implements code in parallel        → src/
-  4. Generates and runs tests           → tests/
-  5. Reviews code quality & security    → REVIEW.md
-  6. Generates README & API specs       → README.md, docs/
+DevFlow: I'll proceed in English. Let me ask a few questions:
+         - Do you need a Web UI or CLI?
+         - Should conversation history be saved?
+You:     Web UI. Session-only history is fine.
+
+DevFlow: Got it! Which development mode?
+         1. Full (design → code → test → review → docs) ← recommended
+         4. No test, no review (speed mode)
+You:     In a hurry, go with 4!
+
+DevFlow: Speed mode it is.
+         → planner creating design doc...
+         → coder × 2 implementing in parallel...
+         → documenter generating docs...
+         ✓ Done!
 ```
 
-One instruction. Six agents. Full development cycle — from design to documentation.
+One instruction, and the entire development cycle runs automatically.
 
 ## Features
 
-- **PM-like Hearing**: orchestrator progressively deepens requirements through natural dialogue
-- **Multi-language Support**: TypeScript/JavaScript, Python, Go, Rust
-- **Auto-detection**: Automatically recognizes project structure, test frameworks, and coding standards
-- **Parallel Execution**: coder + tester run in parallel for context efficiency (number of coders determined dynamically per task)
-- **Security Checks**: Automatically detects XSS, SQL injection, command injection
-- **Memory Management**: Persists knowledge in project scope
-
-## Requirements
-
-- [Claude Code](https://claude.com/claude-code) >= 1.0.0
+- **Conversational requirements** — A few questions to clarify what you need. No spec doc required.
+- **Multi-language** — TypeScript/JavaScript, Python, Go, and Rust supported.
+- **Auto-detection** — Automatically recognizes project structure, test frameworks, and coding standards.
+- **Parallel execution** — coder + tester run in parallel (number of coders scales dynamically per task).
+- **Development modes** — Skip tests and reviews for rapid prototyping. Or go full pipeline for production.
+- **Auto-fix loop** — Tests fail? coder automatically fixes the code and retests. Zero manual back-and-forth.
+- **Existing project support** — Automatically analyzes impact scope of changes. Refactoring made safe.
+- **Security checks** — Automatically detects XSS, SQL injection, command injection, and more.
+- **Memory** — Agents record patterns. Gets faster the more you use it.
 
 ## Installation
+
+[Claude Code](https://claude.com/claude-code) >= 1.0.0 required.
 
 ```
 /plugin marketplace add takuya-motoshima/flux
 /plugin install devflow@flux
 ```
 
-After installation, **restart Claude Code** to load the agents. Then verify with `/agents`.
+After installation, **restart Claude Code** to load the agents. Verify with `/agents`.
 
-:::note
-If you get validation errors like `agents: Invalid input`, clear the plugin cache and retry:
-```
-rm -rf ~/.claude/plugins/cache/
-/plugin install devflow@flux
-```
-:::
+> [!NOTE]
+> If you get validation errors like `agents: Invalid input`, clear the plugin cache and retry:
+> ```
+> rm -rf ~/.claude/plugins/cache/
+> /plugin install devflow@flux
+> ```
 
 ## Usage
 
-### Quick Execution with Custom Commands (Recommended)
+### Custom Commands (Recommended)
 
 ```bash
 /devflow:dev       # Start development (launch orchestrator)
@@ -79,7 +77,7 @@ rm -rf ~/.claude/plugins/cache/
 /devflow:docs      # Generate documentation
 ```
 
-### Or, Specify Agent Directly
+### Or, specify an agent directly
 
 ```
 @devflow:orchestrator
@@ -96,60 +94,37 @@ You can also call individual agents directly:
 @devflow:documenter # Documentation only
 ```
 
-### Agents
-
-| Agent | Role | Output | Notes |
-|-------|------|--------|-------|
-| `orchestrator` | Project Manager: requirements hearing, dev flow management | - | Manages the entire workflow |
-| `planner` | Designer: impact analysis, design creation | `docs/DESIGN.md` | |
-| `coder` | Developer: multi-language implementation | Source code | Runs × N in parallel based on task structure |
-| `tester` | Tester: framework auto-detection, test execution | Test code | Supports Vitest/Jest/pytest/Go testing/cargo test |
-| `reviewer` | Reviewer: quality & security checks | `REVIEW.md` | Read-only (does not modify code) |
-| `documenter` | Documenter: README, API specs, architecture | `README.md`, `docs/` | Docs only (does not modify source code) |
-
 ## Execution Flow
 
-```
-[orchestrator] <- User gives instruction only once
-    |
-  Step 0: Conversation language selection (first time only)
-    |
-  Step 1: Auto-analyze project environment (for existing projects)
-    |
-  Step 2: Hearing (what to build? existing or new?)
-    |
-[planner] Design (sequential) -> docs/DESIGN.md
-    |
-  Parallel --+-- [coder] × N (split by independent areas)
-             +-- [tester] Test spec creation
-    |
-[tester] Test execution (sequential)
-    | (Fix with coder if tests fail, then loop back)
-[reviewer] Review (sequential) -> REVIEW.md
-    |
-[documenter] Documentation generation (optional)
+```mermaid
+flowchart TD
+    A["orchestrator ← User gives instruction only once"] --> B["Step 0: Language selection (first time only)"]
+    B --> C["Step 1: Project analysis (existing projects)"]
+    C --> D["Step 2: Requirements hearing"]
+    D --> E["planner → docs/DESIGN.md"]
+    E --> F["coder × N"] & G["tester — spec creation"]
+    F & G --> H["tester — execution (optional)"]
+    H -. fail .-> F
+    H --> I["reviewer (optional) → docs/REVIEW.md"]
+    I --> J[documenter]
 ```
 
-## Hooks (Notifications)
+### Agents
 
-DevFlow notifies you when agents start and stop via SubagentStart/Stop hooks.
+| Agent | Role | Output |
+|-------|------|--------|
+| `orchestrator` | PM: requirements hearing, dev flow management | - |
+| `planner` | Designer: impact analysis, design creation | `docs/DESIGN.md` |
+| `coder` | Developer: multi-language implementation | Source code |
+| `tester` | Tester: framework auto-detection, test execution | Test code |
+| `reviewer` | Reviewer: quality & security checks | `docs/REVIEW.md` |
+| `documenter` | Documenter: README, API specs | `README.md`, `docs/` |
 
-Default: Displays a notification in the terminal. You can customize `hooks/hooks.json` to add Slack webhooks, logging, etc.
+## Hooks
 
-## Project Settings (Optional)
+Agents notify you on start/stop via SubagentStart/Stop hooks.
 
-Create `project.yml` to customize project-specific settings:
-
-```bash
-cp project.yml.example project.yml
-```
-
-Configuration items:
-- Languages and frameworks
-- Test framework and coverage target
-- Coding standards (max lines, type checking, etc.)
-- Security check items
-- Auto-documentation settings
+By default, notifications are displayed in the terminal. Customize `hooks/hooks.json` to add Slack webhooks, logging, etc.
 
 ## Uninstall
 

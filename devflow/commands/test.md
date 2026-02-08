@@ -6,16 +6,16 @@ disable-model-invocation: true
 
 # DevFlow: Test
 
-testerエージェントを呼び出して、テストを実行してください。
+Delegate to the tester agent to run tests.
 
-testerはテストフレームワークを自動検出し、テストコードの生成・実行を行います。
+The tester auto-detects the test framework and generates/executes test code.
 
-## 実行手順
+## Execution Steps
 
-1. testerエージェントに処理を移譲
-2. テストフレームワークを自動検出（Vitest/Jest/pytest/Go testing/cargo test）
-3. テストコードを生成・実行
-4. テスト結果を報告
+1. Delegate to the tester agent
+2. Auto-detect test framework (Vitest/Jest/pytest/Go testing/cargo test)
+3. Generate and execute test code
+4. Report test results
 
 @devflow:tester
 Please run tests and report the results.

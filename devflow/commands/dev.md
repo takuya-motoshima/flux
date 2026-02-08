@@ -6,15 +6,16 @@ disable-model-invocation: true
 
 # DevFlow: Development Start
 
-orchestratorエージェントを呼び出して、開発フローを開始してください。
+Delegate to the orchestrator agent to start the development workflow.
 
-orchestratorはプロジェクトマネージャーのように対話で要件をヒアリングし、設計・実装・テスト・レビューのフロー全体を自動で進めます。
+The orchestrator acts as a project manager: it conducts requirements hearing through dialogue, selects a development mode, then automatically drives the development flow.
 
-## 実行手順
+## Execution Steps
 
-1. orchestratorエージェントに処理を移譲
-2. ユーザーとの対話で要件を段階的にヒアリング
-3. 開発フロー全体（planner → coder × N + tester → reviewer → documenter）を自動実行
+1. Delegate to the orchestrator agent
+2. Progressively hear requirements through dialogue
+3. Select development mode (full / no-test / no-review / no-test-no-review)
+4. Run the development flow based on selected mode (planner → coder → documenter, with optional tester and reviewer)
 
 @devflow:orchestrator
-Please start the development workflow with PM-like hearing.
+IMPORTANT: You MUST start with Step 0 (language check). Read .claude/memory/user-preferences.md first. If the file does not exist, show the bilingual language selection question and STOP. Do NOT proceed to any other step until the user has answered.

@@ -54,7 +54,6 @@ flux/                                # マーケットプレイスリポジト�
 │   │   └── hooks.json               # SubagentStart/Stop 通知フック
 │   ├── scripts/
 │   │   └── notify.js                # エージェント開始・終了の通知スクリプト
-│   ├── project.yml.example          # プロジェクト設定テンプレート
 │   ├── CHANGELOG.md
 │   ├── DEVELOPMENT.md               # このファイル
 │   ├── LICENSE
@@ -80,13 +79,13 @@ orchestrator (PM役)
         │
         ├─ planner (設計) ─── docs/DESIGN.md 出力
         │
-        ├─ [並列] coder × N + tester (テスト仕様書作成)
+        ├─ [並列] coder × N + tester (テスト仕様書作成) ─── docs/TEST_SPEC.md 出力【テストありの場合】
         │
-        ├─ tester (テスト実行) ─── 失敗時は coder と連携して自動修正
+        ├─ tester (テスト実行) ─── docs/TEST_REPORT.md 出力、失敗時は coder と連携して自動修正【オプション】
         │
-        ├─ reviewer (レビュー) ─── REVIEW.md 出力
+        ├─ reviewer (レビュー) ─── docs/REVIEW.md 出力【オプション】
         │
-        └─ documenter (ドキュメント) ─── README.md, docs/ARCHITECTURE.md 出力
+        └─ documenter (ドキュメント) ─── README.md 出力（+ 条件付きで API仕様書, docs/ARCHITECTURE.md）
 ```
 
 ### 各エージェントの役割
@@ -94,10 +93,10 @@ orchestrator (PM役)
 | エージェント | 目的 | 成果物 | 備考 |
 |---|---|---|---|
 | **orchestrator** | 要件ヒアリング、ワークフロー管理 | — | 全エージェントを Task ツールで起動 |
-| **planner** | 設計作成、影響範囲分析 | `docs/DESIGN.md` | 並列実行グループを含む |
+| **planner** | 設計作成、影響範囲分析 | `docs/DESIGN.md` | 並列実行の推奨は返答テキストで orchestrator に直接伝達 |
 | **coder** | 多言語対応の実装 | ソースコード | × N 並列実行可能 |
-| **tester** | テスト自動検出・実行 | `docs/TEST_SPEC.md`、テストコード | Vitest/Jest/pytest/cargo test 等を自動検出 |
-| **reviewer** | 品質・セキュリティレビュー | `REVIEW.md` | **読み取り専用**（disallowedTools: Edit） |
+| **tester** | テスト自動検出・実行 | `docs/TEST_SPEC.md`、`docs/TEST_REPORT.md`、テストコード | Vitest/Jest/pytest/cargo test 等を自動検出 |
+| **reviewer** | 品質・セキュリティレビュー | `docs/REVIEW.md` | **読み取り専用**（disallowedTools: Edit） |
 | **documenter** | ドキュメント生成・更新 | README, API仕様書 | **ソースコード変更不可**（.md, .yaml のみ編集） |
 
 ### 設計上の重要なポイント
@@ -105,6 +104,20 @@ orchestrator (PM役)
 - **会話言語**: orchestrator が最初に確認し、`.claude/memory/user-preferences.md` に保存。全エージェントが参照して会話・成果物の言語を統一する
 - **並列実行**: 各サブエージェントは別コンテキストで動作。メイン会話は最終結果のみ受け取るため、コンテキストウィンドウを効率的に使える
 - **読み取り専用エージェント**: reviewer と documenter はソースコードを変更しない設計。レビュー結果やドキュメントのみ出力する
+- **開発モード**: orchestrator のヒアリング時に4つのモードから選択可能。テスト・レビューを個別にオプション化（documenter は常に実行）
+- **コンパクション復帰**: orchestrator は長時間セッション（maxTurns: 100）でコンテキスト圧縮が発生する可能性がある。状態を `.claude/memory/` のファイルに保存し、圧縮後に再読み込みして復帰する設計
+- **セッション契約書**: orchestrator が `.claude/memory/dev-session.md` に Project 情報と Expected Outputs を記録。各サブエージェントはこのリストに従って出力を制御する。エージェントの自己判断ではなく orchestrator の指示に従う設計
+
+### 公式ドキュメントとの整合性（調査メモ）
+
+[サブエージェント公式ドキュメント](https://code.claude.com/docs/en/sub-agents) と照合した結果:
+
+- **使用中のフィールド**: `name`, `description`, `tools`, `disallowedTools`, `permissionMode`, `model`, `color`, `memory`, `maxTurns` — すべて公式仕様通り
+- **`Task(agent_type)` 制限**: サブエージェント定義では効果なし（`claude --agent` でメインスレッド実行時のみ有効）。DevFlow の orchestrator はサブエージェントとして動作するため不要
+- **`permissionMode`**: サブエージェント5つ（planner, coder, tester, reviewer, documenter）に `acceptEdits` を設定。orchestrator はヒアリング中でユーザーが操作するため未設定（親の権限を継承）
+- **`skills` フィールド**: スキルをサブエージェントに事前ロード可能。将来的にコーディング規約スキルを coder にプリロードする用途で検討
+- **サブエージェントのネスト**: サブエージェントは他のサブエージェントを起動できないのが公式仕様。ただし orchestrator → planner/coder/tester 等の1段階の委譲は Task ツール経由で動作する
+- **エージェントチーム**（[公式ドキュメント](https://code.claude.com/docs/en/agent-teams)）: 複数の Claude Code インスタンスがメッセージで直接会話・協調する仕組み。実験的機能（`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` 必須）。DevFlow は現行のサブエージェント方式で十分なため v1 では不採用。理由: (1) 実験的で不安定 (2) ワークフローが直列でエージェント間通信不要 (3) トークンコストが大幅に増加 (4) セッション再開不可 (5) split pane が tmux/iTerm2 依存。安定化後に並列レビュー（セキュリティ/パフォーマンス/テスト）等で検討
 
 ## 開発ガイドライン
 
@@ -113,18 +126,42 @@ orchestrator (PM役)
 1. `agents/` のエージェントマークダウンファイルを修正
 2. `CHANGELOG.md` の `[Unreleased]` セクションに追加
 3. README.md と README.ja.md の両方を更新
-4. `claude --plugin-dir ./devflow` でローカルテスト
+4. `claude --plugin-dir ./devflow` でローカルテスト（下記チェックリスト参照）
 5. セマンティックバージョニングに従ってバージョンアップ
+
+### 動作確認チェックリスト
+
+ローカルテスト時に以下を確認する。全項目を毎回チェックする必要はなく、変更に関連する項目を選んで確認する
+
+#### ワークフロー
+- [ ] モード1（フル開発）で planner → coder + tester(並列) → tester(実行) → reviewer → documenter が順に動くか
+- [ ] モード4（テスト・レビューなし）で tester/reviewer がスキップされるか
+- [ ] `.claude/memory/dev-session.md` にモードが正しく保存されるか
+- [ ] `.claude/memory/dev-session.md` に Project セクションと Expected Outputs が正しく書かれるか
+- [ ] `.claude/memory/user-preferences.md` に言語設定が保存されるか
+
+#### ドキュメント出力
+- [ ] `docs/DESIGN.md` がアプリの設計情報のみで、エージェントのワークフロー情報を含まないか
+- [ ] `docs/TEST_SPEC.md` が Phase 1 で生成されるか
+- [ ] `docs/TEST_REPORT.md` が 100行以内か
+- [ ] `docs/REVIEW.md` が 200行以内か
+- [ ] README.md が会話言語で作成されるか
+- [ ] README.md と DESIGN.md の内容が重複していないか
+- [ ] CLI プロジェクトで API仕様書が生成されないか
+- [ ] 単一モジュールのプロジェクトで ARCHITECTURE.md が生成されないか
+- [ ] Expected Outputs に載っていないドキュメントが生成されないか
 
 ### エージェントマークダウンの構造
 
 ```markdown
 ---
 name: agent-name
-description: エージェントの短い説明
+description: "エージェントの短い説明"
 tools: Read, Edit, Write, Bash, Glob, Grep
 disallowedTools: Edit  # 必要に応じて
+permissionMode: acceptEdits  # サブエージェントのみ（orchestrator は未設定）
 model: sonnet
+color: yellow  # blue/green/yellow/cyan/red/magenta
 memory: project
 maxTurns: 50  # 役割に応じて調整
 ---
@@ -137,7 +174,10 @@ maxTurns: 50  # 役割に応じて調整
 [このエージェントが行うこと]
 
 ## ワークフロー
-[ステップバイステップのプロセス]
+[ステップバイステップのプロセス。サブセクションは **太字** で区切る]
+
+**Step 1**: ...
+**Step 2**: ...
 
 ## 注意事項
 [特別な考慮事項、制約]
@@ -146,18 +186,22 @@ maxTurns: 50  # 役割に応じて調整
 [完了後にメモリに記録する内容]
 ```
 
+**見出しルール**: `##` をメインの区切りに使用。`###` は orchestrator のように長いエージェント（300行超）で順序ステップを示す場合のみ。短いエージェントでは `**太字**` でサブセクションを区切る
+
 ### カスタムコマンド
 
 `commands/` のコマンドはエージェントを直接呼び出す:
 - 命名規則: `/devflow:*`
 - エージェント呼び出し: `@devflow:agent-name`
+- 引数の受け渡し: `argument-hint` で引数をサポート。skill 本文に `$ARGUMENTS` がなくても、ユーザーの入力は末尾に `ARGUMENTS: <value>` として自動付与される（[公式ドキュメント](https://code.claude.com/docs/en/skills#pass-arguments-to-skills)）
 
 ### フック
 
 `hooks.json` は SubagentStart/Stop イベントを定義:
+- エージェントの開始・終了を `scripts/notify.js` で通知
 - 公式フォーマット: `[{ hooks: [{ type, command }] }]`
-- 通知スクリプト: `scripts/notify.js`（Node.js の `process.stdin` でクロスプラットフォーム対応）
 - `${CLAUDE_PLUGIN_ROOT}` でプラグインルートを参照
+- スクリプトは Node.js の `process.stdin` でクロスプラットフォーム対応
 
 ## コミットガイドライン
 
@@ -208,6 +252,7 @@ maxTurns: 50  # 役割に応じて調整
 
 - [プラグインドキュメント](https://code.claude.com/docs/ja/plugins)
 - [プラグインリファレンス](https://code.claude.com/docs/ja/plugins-reference)
+- [サブエージェント](https://code.claude.com/docs/en/sub-agents)
 - [エージェントシステム](https://code.claude.com/docs/ja/agents)
 - [マーケットプレイス](https://code.claude.com/docs/ja/plugin-marketplaces)
 
