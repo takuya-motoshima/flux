@@ -28,6 +28,32 @@ DevFlow の開発者および Claude Code セッション向けのコンテキ�
 /devflow:dev
 ```
 
+## リポジトリ構成
+
+DevFlow は2つのリポジトリで管理している:
+
+| リポジトリ | 用途 | インストール |
+|-----------|------|-------------|
+| [flux](https://github.com/takuya-motoshima/flux) `/devflow/` | **正（ソースオブトゥルース）**。マーケットプレイス経由で配布 | `/plugin install devflow@flux` |
+| [devflow](https://github.com/takuya-motoshima/devflow) | 公式 Claude Plugin Directory 提出用のスタンドアロンコピー | `/plugin install devflow@claude-plugin-directory` |
+
+**なぜ2つあるのか**: Claude Plugin Directory はマーケットプレイスではなくスタンドアロンリポジトリを求めるため。開発は flux/devflow/ で行い、公式ディレクトリ用に devflow リポジトリへ同期する
+
+### README の同期
+
+`scripts/sync-to-devflow.js` で flux/devflow/ の README を projects/devflow/ にコピーし、インストールコマンドを公式ディレクトリ向けに自動置換する:
+
+- `devflow@flux` → `devflow@claude-plugin-directory`
+- マーケットプレイス追加コマンドの削除
+- アップデート手順の簡略化
+
+```bash
+node scripts/sync-to-devflow.js [dest-path]
+# デフォルト: ../devflow（= projects/devflow/）
+```
+
+README 以外のファイル（agents/, commands/, hooks/ 等）は両リポジトリで同一なので手動コピーで対応
+
 ## プロジェクト構造
 
 ```

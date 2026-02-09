@@ -8,7 +8,7 @@ A plugin collection that accelerates your Claude Code development workflow.
 
 ### [DevFlow](devflow/README.md)
 
-Just say what you want to build. DevFlow handles the rest.
+Just say what you want to build. 5 specialized agents handle the full cycle — requirements hearing, design, implementation, testing, review, and documentation — automatically.
 
 ```
 You:     /devflow:dev
@@ -20,7 +20,7 @@ You:     Web UI. Session-only is fine.
 → Automatically runs design → code → test → review → docs
 ```
 
-**Features**: Conversational requirements, multi-language (TS/JS, Python, Go, Rust), parallel execution, development modes, security checks
+**Features**: Conversational requirements, multi-language (TS/JS, Python, Go, Rust), parallel execution, development modes, auto-fix loop, security checks, memory
 
 ## Installation
 
