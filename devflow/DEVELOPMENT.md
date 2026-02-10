@@ -283,7 +283,7 @@ maxTurns: 50  # 役割に応じて調整
 | [awesome-claude-code-plugins](https://github.com/ccplugins/awesome-claude-code-plugins) (459 stars) | — | スキップ | 同上 |
 | [ClaudePluginHub](https://www.claudepluginhub.com/) (11,000+ plugins) | 自動スキャン | 反映待ち | push 後 30 分以内に自動検出される想定 |
 
-> **Note:** devflow スタンドアロンリポ（https://github.com/takuya-motoshima/devflow）は削除済み。flux マーケットプレイスに一本化
+> **Note:** devflow スタンドアロンリポ（https://github.com/takuya-motoshima/devflow）は Anthropic 公式ディレクトリの審査完了後に削除予定。flux マーケットプレイスに一本化する
 
 ## 関連リソース
 
