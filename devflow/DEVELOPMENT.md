@@ -273,6 +273,18 @@ maxTurns: 50  # 役割に応じて調整
    /plugin install devflow@flux
    ```
 
+## 掲載・提出状況
+
+| 提出先 | 方法 | 状態 | URL |
+|-------|------|------|-----|
+| [Anthropic 公式ディレクトリ](https://github.com/anthropics/claude-plugins-official) | フォーム提出 | 審査待ち | フォーム経由のため追跡URLなし |
+| [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) (23.3k stars) | Issue #662 | バリデーション待ち | [#662](https://github.com/hesreallyhim/awesome-claude-code/issues/662) |
+| [awesome-claude-plugins](https://github.com/ComposioHQ/awesome-claude-plugins) (1.5k stars) | — | スキップ | プラグインコード全体のコピーが必要な構造のため対象外 |
+| [awesome-claude-code-plugins](https://github.com/ccplugins/awesome-claude-code-plugins) (459 stars) | — | スキップ | 同上 |
+| [ClaudePluginHub](https://www.claudepluginhub.com/) (11,000+ plugins) | 自動スキャン | 反映待ち | push 後 30 分以内に自動検出される想定 |
+
+> **Note:** devflow スタンドアロンリポ（https://github.com/takuya-motoshima/devflow）は削除済み。flux マーケットプレイスに一本化
+
 ## 関連リソース
 
 - [プラグインドキュメント](https://code.claude.com/docs/ja/plugins)

@@ -6,6 +6,7 @@
     "name": "Takuya Motoshima",
     "url": "https://github.com/takuya-motoshima"
   },
+  "strict": true,
   "homepage": "https://github.com/takuya-motoshima/flux",
   "repository": "https://github.com/takuya-motoshima/flux",
   "license": "MIT",
