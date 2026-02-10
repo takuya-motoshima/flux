@@ -281,7 +281,7 @@ maxTurns: 50  # 役割に応じて調整
 | [awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) (23.3k stars) | Issue #662 | バリデーション待ち | [#662](https://github.com/hesreallyhim/awesome-claude-code/issues/662) |
 | [awesome-claude-plugins](https://github.com/ComposioHQ/awesome-claude-plugins) (1.5k stars) | — | スキップ | プラグインコード全体のコピーが必要な構造のため対象外 |
 | [awesome-claude-code-plugins](https://github.com/ccplugins/awesome-claude-code-plugins) (459 stars) | — | スキップ | 同上 |
-| [ClaudePluginHub](https://www.claudepluginhub.com/) (11,000+ plugins) | 自動スキャン | 反映待ち | push 後 30 分以内に自動検出される想定 |
+| [ClaudePluginHub](https://www.claudepluginhub.com/) (11,000+ plugins) | 自動スキャン + フィードバック送信 | 反映待ち | GitHub 検索インデックス未登録のため手動登録をリクエスト済み |
 
 > **Note:** devflow スタンドアロンリポ（https://github.com/takuya-motoshima/devflow）は Anthropic 公式ディレクトリの審査完了後に削除予定。flux マーケットプレイスに一本化する
 
